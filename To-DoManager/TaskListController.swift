@@ -18,6 +18,9 @@ class TaskListController: UITableViewController {
     // отоброжение секций по типам
     var sectionTypesPosition: [TaskPriority] = [.important, .normal]
     
+    // порядок отображения задач по их статусу
+    var tasksStatusPosition: [TaskStatus] = [.planned, .completed]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadTasks()
@@ -31,6 +34,14 @@ class TaskListController: UITableViewController {
         // загрузка и разбор задач из хранилища
         tasksStorage.loadTask().forEach{ task in
             tasks[task.type]?.append(task)
+        }
+        
+        for (taskGropPriority, taskGroup) in tasks{
+            tasks[taskGropPriority] = taskGroup.sorted{task1, task2 in
+                let task1position = tasksStatusPosition.firstIndex(of: task1.status) ?? 0
+                let task2position = tasksStatusPosition.firstIndex(of: task2.status) ?? 0
+                return task1position < task2position
+            }
         }
     }
 
@@ -52,7 +63,37 @@ class TaskListController: UITableViewController {
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return getConfiguredTaskCell_constraints(for: indexPath)
+        // ячейка на основе констрейнтов
+//        return getConfiguredTaskCell_constraints(for: indexPath)
+        
+        // ячейка на основе стека
+        return getConfiguredTaskCell_stack(for: indexPath)
+    }
+    
+    // ячейка на основе ограничений
+    private func getConfiguredTaskCell_stack(for indexPath: IndexPath) -> UITableViewCell{
+        // загружаем прототип ячейки по идентификатору
+        let cell = tableView.dequeueReusableCell(withIdentifier: "taskCellStack", for: indexPath) as! TaskCell
+        // получаем данные о задаче, которую необходимо вывести в ячейке
+        let taskType = sectionTypesPosition[indexPath.section]
+        guard let currentTask = tasks[taskType]?[indexPath.row] else {
+            return cell
+        }
+        
+        // изменяем текст в ячейке
+        cell.title.text = currentTask.title
+        // изменяем символ в ячейке
+        cell.symbol.text = getSymbolForTask(with: currentTask.status)
+        
+        // изменяем цвет текста и символа
+        if currentTask.status == .planned{
+            cell.title.textColor = .black
+            cell.symbol.textColor = .black
+        }else{
+            cell.title.textColor = .lightGray
+            cell.symbol.textColor = .lightGray
+        }
+        return cell
     }
     
     // ячейка на основе ограничений
@@ -66,22 +107,22 @@ class TaskListController: UITableViewController {
         }
         
         // текстовая метка символа
-        let symbolLable = cell.viewWithTag(1) as? UILabel
+        let symbolLabel = cell.viewWithTag(1) as? UILabel
         // текстовая метка названия задачи
-        let textLable = cell.viewWithTag(2) as? UILabel
+        let textLabel = cell.viewWithTag(2) as? UILabel
         
         // изменяем символ в ячейке
-        symbolLable?.text = getSymbolForTask(with: currentTask.status)
+        symbolLabel?.text = getSymbolForTask(with: currentTask.status)
         // изменяем текст в ячейке
-        textLable?.text = currentTask.title
+        textLabel?.text = currentTask.title
         
         // изменяем цвет текста и символа
         if currentTask.status == .planned{
-            textLable?.textColor = .black
-            symbolLable?.textColor = .black
+            textLabel?.textColor = .black
+            symbolLabel?.textColor = .black
         }else{
-            textLable?.textColor = .lightGray
-            symbolLable?.textColor = .lightGray
+            textLabel?.textColor = .lightGray
+            symbolLabel?.textColor = .lightGray
         }
         return cell
     }
