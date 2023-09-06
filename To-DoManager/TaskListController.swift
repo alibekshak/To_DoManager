@@ -50,7 +50,6 @@ class TaskListController: UITableViewController {
         
     }
 
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return tasks.count
     }
@@ -205,4 +204,26 @@ class TaskListController: UITableViewController {
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }
     
+    // Сортировка задач с помощью режима редактирования
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        // секция, из которой происходит перемещение
+        let taskTypeFrom = sectionTypesPosition[sourceIndexPath.section]
+        // секция, в которую происходит перемещение
+        let taskTypeTo = sectionTypesPosition[destinationIndexPath.section]
+        
+        // безопасно извлекаем задачу
+        guard let movedTask = tasks[taskTypeFrom]?[sourceIndexPath.row] else{
+            return
+        }
+        // удаляем задачу с места, от куда она перенесена
+        tasks[taskTypeFrom]!.remove(at: sourceIndexPath.row)
+        // вставляем задачу на новую позицию
+        tasks[taskTypeTo]!.insert(movedTask, at: destinationIndexPath.row)
+        
+        if taskTypeFrom != taskTypeTo{
+            tasks[taskTypeTo]![destinationIndexPath.row].type = taskTypeTo
+        }
+        // обновляем данные
+        tableView.reloadData()
+    }
 }
