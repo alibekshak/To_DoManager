@@ -10,7 +10,7 @@
         <!--Task Edit Controller-->
         <scene sceneID="dI0-bP-fiv">
             <objects>
-                <tableViewController id="Ylf-CI-0IK" customClass="TaskEditController" customModule="To_DoManager" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="TaskEditController" id="Ylf-CI-0IK" customClass="TaskEditController" customModule="To_DoManager" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="8wh-FR-nhM">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -90,7 +90,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hpK-Jy-ENv">
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="hpK-Jy-ENv">
                                                     <rect key="frame" x="324" y="5.9999999999999982" width="51" height="31.333333333333329"/>
                                                 </switch>
                                             </subviews>
@@ -109,12 +109,18 @@
                             </tableViewSection>
                         </sections>
                         <connections>
-                            <outlet property="dataSource" destination="Ylf-CI-0IK" id="Gto-Sl-7Jc"/>
                             <outlet property="delegate" destination="Ylf-CI-0IK" id="12h-cf-aqY"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="DXX-0A-DoM"/>
+                    <navigationItem key="navigationItem" id="DXX-0A-DoM">
+                        <barButtonItem key="rightBarButtonItem" title="Сохранить" id="C68-6e-091">
+                            <connections>
+                                <action selector="saveTask:" destination="Ylf-CI-0IK" id="kHg-Gt-OXh"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="taskStatusSwitch" destination="hpK-Jy-ENv" id="Kgo-WL-jpe"/>
                         <outlet property="taskTitle" destination="dwO-Nf-6lo" id="5To-Hr-Ye5"/>
                         <outlet property="taskTypeLabel" destination="VhS-tb-XQW" id="nuQ-FY-rPE"/>
                     </connections>
@@ -252,7 +258,7 @@
                     <navigationItem key="navigationItem" id="hvZ-xb-Vyg">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="HvY-pd-Dec">
                             <connections>
-                                <segue destination="Ylf-CI-0IK" kind="show" id="js0-Iw-0tI"/>
+                                <segue destination="Ylf-CI-0IK" kind="show" identifier="toCreateScreen" id="js0-Iw-0tI"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

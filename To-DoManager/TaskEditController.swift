@@ -16,6 +16,8 @@ class TaskEditController: UITableViewController {
     
     @IBOutlet var taskTitle: UITextField!
     @IBOutlet var taskTypeLabel: UILabel!
+    @IBOutlet var taskStatusSwitch: UISwitch!
+    
     
     // Название типов задач
     private var taskTitles: [TaskPriority: String] = [
@@ -28,6 +30,10 @@ class TaskEditController: UITableViewController {
         taskTitle?.text = taskText
         // обновление метки в соответствии текущим типом
         taskTypeLabel?.text = taskTitles[taskType]
+        // обновляем статус задачи
+        if taskStatus == .completed{
+            taskStatusSwitch.isOn = true
+        }
     }
 
     // MARK: - Table view data source
@@ -56,6 +62,17 @@ class TaskEditController: UITableViewController {
                 taskTypeLabel?.text = taskTitles[taskType]
             }
         }
+    }
+    
+    @IBAction func saveTask(_ sender: UIBarButtonItem){
+        // получаем актуальные значения
+        let title = taskTitle?.text ?? ""
+        let type = taskType
+        let status: TaskStatus = taskStatusSwitch.isOn ? .completed : .planned
+        // вызываем обработчик
+        doAfterEdit?(title, type, status)
+        // возвращаемся к предыдущему экрану
+        navigationController?.popViewController(animated: true)
     }
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
