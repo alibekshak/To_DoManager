@@ -20,7 +20,7 @@ class TaskEditController: UITableViewController {
     // Название типов задач
     private var taskTitles: [TaskPriority: String] = [
         .important: "Важная",
-        .important: "Текущая"
+        .normal: "Текущая"
     ]
     
     override func viewDidLoad() {

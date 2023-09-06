@@ -8,38 +8,60 @@
 import UIKit
 
 class TaskTypeController: UITableViewController {
+    
+    // кортеж, описывающий тип задачи
+    typealias TypeCellDescription = (type: TaskPriority, title: String, description: String)
+    
+    // коллекция доступных типов задач с их описанием
+    private var taskTypesInformation: [TypeCellDescription] = [
+        (type: .important, title: "Важная", description: "Такой тип задач является наиболее приоритетным для выполнения. Все важные задачи выводятся в самом верху списка задач"),
+        (type: .normal, title: "Текущая", description: "Задача с обычным приоритетом")
+    ]
+    
+    // выбранный приоритет
+    var selectedType: TaskPriority = .normal
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        // получение значение типа UINib
+        let cellTypeNib = UINib(nibName: "TaskTypeCell", bundle: nil)
+        // регистрация кастомной ячейки в табличном
+        tableView.register(cellTypeNib, forCellReuseIdentifier: "TaskTypeCell")
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return taskTypesInformation.count
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskTypeCell", for: indexPath) as! TaskTypeCell
+        // получаем текущий элемент
+        let typeDescription = taskTypesInformation[indexPath.row]
+        
+        // заполняем ячейку данными
+        cell.typeTitel.text = typeDescription.title
+        cell.typeDescription.text = typeDescription.description
+        
+        // если тип является выбранным, то отмечаем галочкой
+        if selectedType == typeDescription.type{
+            cell.accessoryType = .checkmark
+        }else{
+            cell.accessoryType = .none
+        }
+        
         return cell
     }
-    */
+
 
     /*
     // Override to support conditional editing of the table view.
