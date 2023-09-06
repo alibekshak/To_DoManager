@@ -21,6 +21,9 @@ class TaskTypeController: UITableViewController {
     // выбранный приоритет
     var selectedType: TaskPriority = .normal
     
+    // обработчик выбора типа
+    var doAfterTypeSelected: ((TaskPriority) -> Void)?
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +47,7 @@ class TaskTypeController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // получение переиспользуемой кастомной ячейки по ее идентификатору
         let cell = tableView.dequeueReusableCell(withIdentifier: "TaskTypeCell", for: indexPath) as! TaskTypeCell
         // получаем текущий элемент
         let typeDescription = taskTypesInformation[indexPath.row]
@@ -61,7 +65,16 @@ class TaskTypeController: UITableViewController {
         
         return cell
     }
-
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // получаем выбранный тип
+        let selectedType = taskTypesInformation[indexPath.row].type
+        // вызов обработчика
+        doAfterTypeSelected?(selectedType)
+        // переход к предыдущему экрану
+        navigationController?.popViewController(animated: true)
+        
+    }
 
     /*
     // Override to support conditional editing of the table view.

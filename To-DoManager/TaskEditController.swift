@@ -42,8 +42,21 @@ class TaskEditController: UITableViewController {
         return 3
     }
     
-    
-
+    // Передача данных от TaskEditController к TaskTypeController
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toTaskTypeScreen"{
+            // ссылка на контроллер назначения
+            let destination = segue.destination as! TaskTypeController
+            // передача выбранного типа
+            destination.selectedType = taskType
+            // передача обработчика выбора типа
+            destination.doAfterTypeSelected = { [unowned self] selectedType in
+                taskType = selectedType
+                // обновляем метку с текущим типом
+                taskTypeLabel?.text = taskTitles[taskType]
+            }
+        }
+    }
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
