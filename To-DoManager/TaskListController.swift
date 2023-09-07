@@ -16,14 +16,20 @@ class TaskListController: UITableViewController {
     var tasks: [TaskPriority:[TaskProtocol]] = [:]{
         didSet{
             for (tasksGroupPriority, tasksGroup) in tasks{
-                    tasks[tasksGroupPriority] = tasksGroup.sorted{task1, task2 in
-                        let task1position = tasksStatusPosition.firstIndex(of: task1.status) ?? 0
-                        let task2position = tasksStatusPosition.firstIndex(of: task2.status) ?? 0
-                        return task1position < task2position
-                    }
+                tasks[tasksGroupPriority] = tasksGroup.sorted{task1, task2 in
+                    let task1position = tasksStatusPosition.firstIndex(of: task1.status) ?? 0
+                    let task2position = tasksStatusPosition.firstIndex(of: task2.status) ?? 0
+                    return task1position < task2position
                 }
             }
+            // сохранение задач
+            var savingArray: [TaskProtocol] = []
+            tasks.forEach{ _, value in
+                savingArray += value
+            }
+            tasksStorage.saveTask(savingArray)
         }
+    }
     
     // отоброжение секций по типам
     var sectionTypesPosition: [TaskPriority] = [.important, .normal]
